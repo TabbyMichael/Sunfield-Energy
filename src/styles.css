@@ -1,0 +1,164 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-border: var(--sidebar-border);
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+}
+
+/* ============================================================
+   LIGHT THEME (default :root)
+   Crisp white base, solar yellow primary, energy blue secondary
+   ============================================================ */
+:root {
+  --radius: 0.75rem;
+  --background: oklch(0.985 0.005 250);          /* near-white with cool tint */
+  --foreground: oklch(0.2 0.03 255);             /* deep navy ink */
+  --surface: oklch(0.97 0.008 250);
+  --surface-elevated: oklch(1 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.03 255);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.03 255);
+  --primary: oklch(0.72 0.17 70);                /* solar yellow/amber */
+  --primary-foreground: oklch(0.2 0.03 255);
+  --secondary: oklch(0.6 0.16 235);              /* energy blue */
+  --secondary-foreground: oklch(0.99 0.005 250);
+  --muted: oklch(0.94 0.01 250);
+  --muted-foreground: oklch(0.45 0.02 255);
+  --accent: oklch(0.72 0.17 70);
+  --accent-foreground: oklch(0.2 0.03 255);
+  --destructive: oklch(0.58 0.22 25);
+  --destructive-foreground: oklch(0.99 0.005 250);
+  --success: oklch(0.62 0.16 155);
+  --warning: oklch(0.74 0.17 60);
+  --border: oklch(0.88 0.01 250 / 80%);
+  --input: oklch(0.92 0.01 250);
+  --ring: oklch(0.72 0.17 70);
+  --sidebar: oklch(0.98 0.006 250);
+  --sidebar-foreground: oklch(0.3 0.025 255);
+  --sidebar-accent: oklch(0.94 0.01 250);
+  --sidebar-border: oklch(0.88 0.01 250 / 70%);
+
+  /* Gradients & shadows — light variant */
+  --gradient-solar: linear-gradient(135deg, oklch(0.78 0.17 75) 0%, oklch(0.68 0.18 50) 100%);
+  --gradient-energy: linear-gradient(135deg, oklch(0.62 0.16 230) 0%, oklch(0.5 0.2 265) 100%);
+  --gradient-hero: linear-gradient(180deg, oklch(0.985 0.005 250 / 0.4) 0%, oklch(0.985 0.005 250 / 0.95) 100%);
+  --shadow-glow: 0 0 50px -12px oklch(0.72 0.17 70 / 0.45);
+  --shadow-card: 0 8px 24px -10px oklch(0.2 0.03 255 / 0.18);
+}
+
+/* ============================================================
+   DARK THEME (.dark)
+   Solar SaaS dark theme — navy base
+   ============================================================ */
+.dark {
+  --background: oklch(0.18 0.03 255);
+  --foreground: oklch(0.97 0.01 250);
+  --surface: oklch(0.22 0.03 255);
+  --surface-elevated: oklch(0.26 0.035 255);
+  --card: oklch(0.22 0.03 255);
+  --card-foreground: oklch(0.97 0.01 250);
+  --popover: oklch(0.24 0.03 255);
+  --popover-foreground: oklch(0.97 0.01 250);
+  --primary: oklch(0.78 0.16 75);
+  --primary-foreground: oklch(0.18 0.03 255);
+  --secondary: oklch(0.7 0.15 230);
+  --secondary-foreground: oklch(0.18 0.03 255);
+  --muted: oklch(0.28 0.03 255);
+  --muted-foreground: oklch(0.7 0.02 250);
+  --accent: oklch(0.78 0.16 75);
+  --accent-foreground: oklch(0.18 0.03 255);
+  --destructive: oklch(0.62 0.22 25);
+  --destructive-foreground: oklch(0.98 0.01 250);
+  --success: oklch(0.7 0.16 155);
+  --warning: oklch(0.78 0.16 60);
+  --border: oklch(0.32 0.03 255 / 60%);
+  --input: oklch(0.28 0.03 255);
+  --ring: oklch(0.78 0.16 75);
+  --sidebar: oklch(0.16 0.03 255);
+  --sidebar-foreground: oklch(0.85 0.02 250);
+  --sidebar-accent: oklch(0.24 0.03 255);
+  --sidebar-border: oklch(0.3 0.03 255 / 50%);
+
+  --gradient-solar: linear-gradient(135deg, oklch(0.78 0.16 75) 0%, oklch(0.7 0.18 50) 100%);
+  --gradient-energy: linear-gradient(135deg, oklch(0.7 0.15 230) 0%, oklch(0.55 0.18 260) 100%);
+  --gradient-hero: linear-gradient(180deg, oklch(0.18 0.03 255 / 0.4) 0%, oklch(0.18 0.03 255 / 0.95) 100%);
+  --shadow-glow: 0 0 60px -10px oklch(0.78 0.16 75 / 0.4);
+  --shadow-card: 0 8px 30px -8px oklch(0.05 0.02 255 / 0.5);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    font-family: var(--font-sans);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-solar { background: var(--gradient-solar); }
+  .bg-gradient-energy { background: var(--gradient-energy); }
+  .text-gradient-solar {
+    background: var(--gradient-solar);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+  .shadow-card { box-shadow: var(--shadow-card); }
+  .glass {
+    background: color-mix(in oklab, var(--surface) 70%, transparent);
+    backdrop-filter: blur(12px);
+    border: 1px solid color-mix(in oklab, var(--border) 100%, transparent);
+  }
+}
