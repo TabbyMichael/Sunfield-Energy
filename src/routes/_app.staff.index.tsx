@@ -1,18 +1,38 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { RoleGuard } from "@/components/guards/RouteGuards";
 import { PageHeader, StatCard } from "@/components/dashboard/Shared";
-import { Users, FileText, Wrench, Calendar } from "lucide-react";
-import { leads, quotes, installations } from "@/lib/mock-data";
+import DashboardMap from "@/components/dashboard/DashboardMap";
+import { Users, FileText, Wrench, Calendar, MapPin } from "lucide-react";
+import { installationMapLocations, installations, leads, quotes } from "@/lib/mock-data";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/_app/staff/")({
-  component: () => (
-    <RoleGuard allowed={["staff"]}>
-      <StaffOverview />
-    </RoleGuard>
-  ),
+  component: StaffOverview,
 });
 
 function StaffOverview() {
+  const [locations, setLocations] = useState(installationMapLocations);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch installation locations from API
+    fetch('http://127.0.0.1:8000/api/v1/installations/map-locations', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        setLocations(Array.isArray(data) && data.length > 0 ? data : installationMapLocations);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching locations:', err);
+        setLocations(installationMapLocations);
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <div>
       <PageHeader title="My Workspace" description="Today's leads, quotes and installations." />
@@ -22,6 +42,25 @@ function StaffOverview() {
         <StatCard label="Pending Quotes" value="6" icon={FileText} accent="secondary" />
         <StatCard label="Installations Today" value="2" icon={Wrench} accent="success" />
         <StatCard label="Site Visits This Week" value="9" icon={Calendar} accent="primary" />
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-border/60 bg-surface p-6 shadow-card">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="font-display text-lg font-bold flex items-center gap-2">
+              <MapPin className="h-5 w-5 text-primary" />
+              Installation Sites
+            </h3>
+            <p className="text-xs text-muted-foreground">View all active installation locations</p>
+          </div>
+        </div>
+        {loading ? (
+          <div className="h-96 flex items-center justify-center text-gray-500">
+            Loading map...
+          </div>
+        ) : (
+          <DashboardMap locations={locations} height="400px" />
+        )}
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">

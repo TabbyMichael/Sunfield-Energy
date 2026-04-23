@@ -7,11 +7,7 @@ import { Search, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_app/staff/leads")({
-  component: () => (
-    <RoleGuard allowed={["staff", "admin"]}>
-      <LeadsPage />
-    </RoleGuard>
-  ),
+  component: LeadsPage,
 });
 
 const statuses = ["All", "New", "Contacted", "Qualified", "Proposal", "Won", "Lost"] as const;

@@ -4,11 +4,7 @@ import { PageHeader, StatusBadge } from "@/components/dashboard/Shared";
 import { orders } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_app/staff/orders")({
-  component: () => (
-    <RoleGuard allowed={["staff", "admin"]}>
-      <StaffOrdersPage />
-    </RoleGuard>
-  ),
+  component: StaffOrdersPage,
 });
 
 function StaffOrdersPage() {

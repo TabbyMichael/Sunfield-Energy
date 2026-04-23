@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.core.security import verify_password, get_password_hash, create_access_token
-from app.schemas.auth import UserCreate, UserLogin, Token, UserResponse
+from app.core.dependencies import get_current_user
+from app.schemas.auth import UserCreate, UserLogin, Token, UserResponse, UserLocationUpdate
 from app.models.user import User
 
 router = APIRouter()
@@ -61,3 +62,34 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
     )
     
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.put("/location", response_model=UserResponse)
+def update_location(
+    location_data: UserLocationUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Update user location
+    for field, value in location_data.model_dump(exclude_unset=True).items():
+        setattr(current_user, field, value)
+    
+    db.commit()
+    db.refresh(current_user)
+    
+    return current_user
+
+
+@router.get("/location", response_model=UserResponse)
+def get_location(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Check if user has location sharing enabled
+    if not current_user.location_sharing_enabled:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Location sharing is disabled"
+        )
+    
+    return current_user

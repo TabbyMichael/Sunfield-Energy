@@ -1,15 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RoleGuard } from "@/components/guards/RouteGuards";
 import { PageHeader } from "@/components/dashboard/Shared";
 import { installations } from "@/lib/mock-data";
 import { InstallationTimeline } from "@/components/dashboard/InstallationTimeline";
 
 export const Route = createFileRoute("/_app/admin/installations")({
-  component: () => (
-    <RoleGuard allowed={["admin"]}>
-      <AdminInstallationsPage />
-    </RoleGuard>
-  ),
+  component: AdminInstallationsPage,
 });
 
 function AdminInstallationsPage() {

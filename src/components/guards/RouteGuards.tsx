@@ -21,6 +21,9 @@ interface RoleGuardProps {
   fallback?: ReactNode;
 }
 
+/**
+ * Component-based guard that checks if the user has one of the allowed roles.
+ */
 export function RoleGuard({ allowed, children, fallback }: RoleGuardProps) {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" />;
@@ -41,12 +44,44 @@ export function RoleGuard({ allowed, children, fallback }: RoleGuardProps) {
   return <>{children}</>;
 }
 
+interface PermissionGuardProps {
+  permission: Permission;
+  children: ReactNode;
+  fallback?: ReactNode;
+}
+
+/**
+ * Component-based guard that checks if the user has a specific permission.
+ */
+export function PermissionGuard({ permission, children, fallback }: PermissionGuardProps) {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" />;
+  if (!hasPermission(user.role, permission)) {
+    return (
+      fallback ?? (
+        <div className="flex min-h-[60vh] items-center justify-center p-8 text-center">
+          <div>
+            <h2 className="font-display text-2xl font-bold">Access restricted</h2>
+            <p className="mt-2 text-muted-foreground">
+              You don't have the "{permission}" permission required for this view.
+            </p>
+          </div>
+        </div>
+      )
+    );
+  }
+  return <>{children}</>;
+}
+
 interface CanProps {
   permission: Permission;
   children: ReactNode;
   fallback?: ReactNode;
 }
 
+/**
+ * Inline permission check for showing/hiding UI elements.
+ */
 export function Can({ permission, children, fallback = null }: CanProps) {
   const { user } = useAuth();
   if (!hasPermission(user?.role, permission)) return <>{fallback}</>;

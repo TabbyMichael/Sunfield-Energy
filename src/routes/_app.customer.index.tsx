@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { RoleGuard } from "@/components/guards/RouteGuards";
 import { PageHeader, StatCard } from "@/components/dashboard/Shared";
 import { Activity, DollarSign, Wrench, Leaf, ArrowRight } from "lucide-react";
 import { energyProduction } from "@/lib/mock-data";
@@ -7,11 +6,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_app/customer/")({
-  component: () => (
-    <RoleGuard allowed={["customer"]}>
-      <CustomerOverview />
-    </RoleGuard>
-  ),
+  component: CustomerOverview,
 });
 
 function CustomerOverview() {

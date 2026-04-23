@@ -13,6 +13,17 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from app.db.base import Base
 from app.core.config import settings
 
+# Import all models for Alembic autogenerate support
+from app.models.user import User
+from app.models.role import Role, Permission, UserRole, RolePermission
+from app.models.lead import Lead
+from app.models.product import Product
+from app.models.quote import Quote, QuoteItem
+from app.models.order import Order, Payment
+from app.models.installation import Installation, InstallationStep
+from app.models.analytics import DailyRevenueStats, LeadConversionStats, InstallationMetrics, AnalyticsEvent
+from app.models.notification import Notification
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

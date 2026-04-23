@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RoleGuard } from "@/components/guards/RouteGuards";
 import { PageHeader, StatusBadge } from "@/components/dashboard/Shared";
 import { quotes } from "@/lib/mock-data";
 import { Plus, Search } from "lucide-react";
@@ -7,11 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_app/admin/quotes")({
-  component: () => (
-    <RoleGuard allowed={["admin"]}>
-      <AdminQuotesPage />
-    </RoleGuard>
-  ),
+  component: AdminQuotesPage,
 });
 
 function AdminQuotesPage() {

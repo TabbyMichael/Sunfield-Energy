@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from app.core.config import settings
-from app.api.v1 import auth, users, leads, products, quotes, orders, installations, analytics
+from app.api.v1 import auth, users, leads, products, quotes, orders, installations, analytics, notifications
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -29,6 +29,7 @@ app.include_router(quotes.router, prefix=f"{settings.API_V1_STR}/quotes", tags=[
 app.include_router(orders.router, prefix=f"{settings.API_V1_STR}/orders", tags=["Orders"])
 app.include_router(installations.router, prefix=f"{settings.API_V1_STR}/installations", tags=["Installations"])
 app.include_router(analytics.router, prefix=f"{settings.API_V1_STR}/analytics", tags=["Analytics"])
+app.include_router(notifications.router, prefix=f"{settings.API_V1_STR}/notifications", tags=["Notifications"])
 
 
 @app.get("/")

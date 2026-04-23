@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, Numeric, DateTime, ForeignKey, func
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 import uuid
 from app.db.base import Base
 
@@ -17,6 +18,12 @@ class Quote(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
+    # Relationships
+    lead = relationship("Lead", back_populates="quotes")
+    creator = relationship("User", back_populates="quotes_created")
+    items = relationship("QuoteItem", back_populates="quote", cascade="all, delete-orphan")
+    order = relationship("Order", back_populates="quote", uselist=False)
+
 
 class QuoteItem(Base):
     __tablename__ = "quote_items"
@@ -26,3 +33,7 @@ class QuoteItem(Base):
     product_id = Column(UUID(as_uuid=True), ForeignKey("products.id"))
     quantity = Column(Numeric(10, 0))
     unit_price = Column(Numeric(10, 2))
+
+    # Relationships
+    quote = relationship("Quote", back_populates="items")
+    product = relationship("Product", back_populates="quote_items")

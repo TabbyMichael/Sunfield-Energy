@@ -5,7 +5,7 @@ import {
   Sun, LayoutDashboard, Users, Shield, Package, FileText, ShoppingCart,
   Wrench, BarChart3, LogOut, Bell, Search, Menu, X, Zap, Home, Receipt, Activity,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
@@ -25,6 +25,7 @@ const navByRole: Record<Role, NavItem[]> = {
     { to: "/admin/orders", label: "Orders", icon: ShoppingCart },
     { to: "/admin/installations", label: "Installations", icon: Wrench },
     { to: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+    { to: "/admin/notifications", label: "Notifications", icon: Bell },
   ],
   staff: [
     { to: "/staff", label: "Overview", icon: LayoutDashboard },
@@ -32,6 +33,7 @@ const navByRole: Record<Role, NavItem[]> = {
     { to: "/staff/quotes", label: "Quote Builder", icon: FileText },
     { to: "/staff/orders", label: "Assigned Orders", icon: ShoppingCart },
     { to: "/staff/installations", label: "Installations", icon: Wrench },
+    { to: "/staff/notifications", label: "Notifications", icon: Bell },
   ],
   customer: [
     { to: "/customer", label: "Overview", icon: Home },
@@ -39,6 +41,7 @@ const navByRole: Record<Role, NavItem[]> = {
     { to: "/customer/orders", label: "My Orders", icon: Receipt },
     { to: "/customer/installation", label: "Installation Status", icon: Wrench },
     { to: "/customer/savings", label: "Savings Dashboard", icon: Activity },
+    { to: "/customer/notifications", label: "Notifications", icon: Bell },
   ],
 };
 
@@ -107,6 +110,33 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
 export function DashboardTopbar({ onMenuClick }: { onMenuClick: () => void }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://127.0.0.1:8000/api/v1/notifications/unread-count', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const data = await response.json();
+        setUnreadCount(data.count);
+      } catch (error) {
+        console.error('Error fetching unread count:', error);
+      }
+    };
+
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 30000); // Poll every 30 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  const getNotificationsPath = () => {
+    if (!user) return '/login';
+    return `/${user.role}/notifications`;
+  };
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-3 border-b border-border/60 bg-background/80 px-4 backdrop-blur-xl sm:px-6">
@@ -131,10 +161,16 @@ export function DashboardTopbar({ onMenuClick }: { onMenuClick: () => void }) {
 
       <div className="ml-auto flex items-center gap-2">
         <ThemeToggle />
-        <button className="relative rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground">
-          <Bell className="h-5 w-5" />
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />
-        </button>
+        <Link to={getNotificationsPath()} className="relative">
+          <button className="rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground">
+            <Bell className="h-5 w-5" />
+            {unreadCount > 0 && (
+              <span className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </button>
+        </Link>
 
         <div className="hidden items-center gap-3 rounded-lg border border-border/60 bg-surface px-3 py-1.5 sm:flex">
           <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-solar text-xs font-bold text-primary-foreground">

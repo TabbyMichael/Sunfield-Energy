@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RoleGuard } from "@/components/guards/RouteGuards";
 import { PageHeader, StatCard } from "@/components/dashboard/Shared";
 import { analyticsRevenue, segmentMix } from "@/lib/mock-data";
 import { DollarSign, Zap, Wrench, TrendingUp } from "lucide-react";
@@ -9,11 +8,7 @@ import {
 } from "recharts";
 
 export const Route = createFileRoute("/_app/admin/analytics")({
-  component: () => (
-    <RoleGuard allowed={["admin"]}>
-      <AnalyticsPage />
-    </RoleGuard>
-  ),
+  component: AnalyticsPage,
 });
 
 const COLORS = ["#F59E0B", "#0EA5E9", "#10B981"];

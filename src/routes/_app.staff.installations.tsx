@@ -5,11 +5,7 @@ import { installations } from "@/lib/mock-data";
 import { InstallationTimeline } from "@/components/dashboard/InstallationTimeline";
 
 export const Route = createFileRoute("/_app/staff/installations")({
-  component: () => (
-    <RoleGuard allowed={["staff", "admin"]}>
-      <StaffInstallationsPage />
-    </RoleGuard>
-  ),
+  component: StaffInstallationsPage,
 });
 
 function StaffInstallationsPage() {

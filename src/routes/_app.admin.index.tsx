@@ -1,24 +1,44 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { RoleGuard } from "@/components/guards/RouteGuards";
 import { PageHeader, StatCard } from "@/components/dashboard/Shared";
-import { DollarSign, Users, Wrench, TrendingUp, Sun } from "lucide-react";
-import { analyticsRevenue, segmentMix } from "@/lib/mock-data";
+import DashboardMap from "@/components/dashboard/DashboardMap";
+import { DollarSign, Users, Wrench, TrendingUp, Sun, MapPin } from "lucide-react";
+import { analyticsRevenue, installationMapLocations, segmentMix } from "@/lib/mock-data";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend,
 } from "recharts";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/_app/admin/")({
-  component: () => (
-    <RoleGuard allowed={["admin"]}>
-      <AdminOverview />
-    </RoleGuard>
-  ),
+  component: AdminOverview,
 });
 
 const COLORS = ["#F59E0B", "#0EA5E9", "#10B981"];
 
 function AdminOverview() {
+  const [locations, setLocations] = useState(installationMapLocations);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch installation locations from API
+    fetch('http://127.0.0.1:8000/api/v1/installations/map-locations', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        setLocations(Array.isArray(data) && data.length > 0 ? data : installationMapLocations);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching locations:', err);
+        setLocations(installationMapLocations);
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <div>
       <PageHeader
@@ -75,6 +95,25 @@ function AdminOverview() {
             </ResponsiveContainer>
           </div>
         </div>
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-border/60 bg-surface p-6 shadow-card">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="font-display text-lg font-bold flex items-center gap-2">
+              <MapPin className="h-5 w-5 text-primary" />
+              Installation Locations
+            </h3>
+            <p className="text-xs text-muted-foreground">Monitor all active installation sites</p>
+          </div>
+        </div>
+        {loading ? (
+          <div className="h-96 flex items-center justify-center text-gray-500">
+            Loading map...
+          </div>
+        ) : (
+          <DashboardMap locations={locations} height="500px" />
+        )}
       </div>
     </div>
   );
