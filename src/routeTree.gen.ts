@@ -16,7 +16,11 @@ import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as PublicQuoteRouteImport } from './routes/_public.quote'
 import { Route as PublicProductsRouteImport } from './routes/_public.products'
 import { Route as AuthLoginRouteImport } from './routes/_auth.login'
+import { Route as AppStaffRouteImport } from './routes/_app.staff'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppCustomerRouteImport } from './routes/_app.customer'
+import { Route as AppAdminRouteImport } from './routes/_app.admin'
+import { Route as PublicProductsIndexRouteImport } from './routes/_public.products.index'
 import { Route as AppStaffIndexRouteImport } from './routes/_app.staff.index'
 import { Route as AppCustomerIndexRouteImport } from './routes/_app.customer.index'
 import { Route as AppAdminIndexRouteImport } from './routes/_app.admin.index'
@@ -26,17 +30,20 @@ import { Route as PublicSolutionsCommercialRouteImport } from './routes/_public.
 import { Route as PublicProductsSkuRouteImport } from './routes/_public.products.$sku'
 import { Route as AppStaffQuotesRouteImport } from './routes/_app.staff.quotes'
 import { Route as AppStaffOrdersRouteImport } from './routes/_app.staff.orders'
+import { Route as AppStaffNotificationsRouteImport } from './routes/_app.staff.notifications'
 import { Route as AppStaffLeadsRouteImport } from './routes/_app.staff.leads'
 import { Route as AppStaffInstallationsRouteImport } from './routes/_app.staff.installations'
 import { Route as AppCustomerSavingsRouteImport } from './routes/_app.customer.savings'
 import { Route as AppCustomerQuotesRouteImport } from './routes/_app.customer.quotes'
 import { Route as AppCustomerOrdersRouteImport } from './routes/_app.customer.orders'
+import { Route as AppCustomerNotificationsRouteImport } from './routes/_app.customer.notifications'
 import { Route as AppCustomerInstallationRouteImport } from './routes/_app.customer.installation'
 import { Route as AppAdminUsersRouteImport } from './routes/_app.admin.users'
 import { Route as AppAdminRolesRouteImport } from './routes/_app.admin.roles'
 import { Route as AppAdminQuotesRouteImport } from './routes/_app.admin.quotes'
 import { Route as AppAdminProductsRouteImport } from './routes/_app.admin.products'
 import { Route as AppAdminOrdersRouteImport } from './routes/_app.admin.orders'
+import { Route as AppAdminNotificationsRouteImport } from './routes/_app.admin.notifications'
 import { Route as AppAdminInstallationsRouteImport } from './routes/_app.admin.installations'
 import { Route as AppAdminAnalyticsRouteImport } from './routes/_app.admin.analytics'
 
@@ -72,25 +79,45 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
+const AppStaffRoute = AppStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
-const AppStaffIndexRoute = AppStaffIndexRouteImport.update({
-  id: '/staff/',
-  path: '/staff/',
+const AppCustomerRoute = AppCustomerRouteImport.update({
+  id: '/customer',
+  path: '/customer',
   getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
+const PublicProductsIndexRoute = PublicProductsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PublicProductsRoute,
+} as any)
+const AppStaffIndexRoute = AppStaffIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppStaffRoute,
 } as any)
 const AppCustomerIndexRoute = AppCustomerIndexRouteImport.update({
-  id: '/customer/',
-  path: '/customer/',
-  getParentRoute: () => AppRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppCustomerRoute,
 } as any)
 const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => AppRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminRoute,
 } as any)
 const PublicSolutionsResidentialRoute =
   PublicSolutionsResidentialRouteImport.update({
@@ -116,100 +143,122 @@ const PublicProductsSkuRoute = PublicProductsSkuRouteImport.update({
   getParentRoute: () => PublicProductsRoute,
 } as any)
 const AppStaffQuotesRoute = AppStaffQuotesRouteImport.update({
-  id: '/staff/quotes',
-  path: '/staff/quotes',
-  getParentRoute: () => AppRoute,
+  id: '/quotes',
+  path: '/quotes',
+  getParentRoute: () => AppStaffRoute,
 } as any)
 const AppStaffOrdersRoute = AppStaffOrdersRouteImport.update({
-  id: '/staff/orders',
-  path: '/staff/orders',
-  getParentRoute: () => AppRoute,
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AppStaffRoute,
+} as any)
+const AppStaffNotificationsRoute = AppStaffNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AppStaffRoute,
 } as any)
 const AppStaffLeadsRoute = AppStaffLeadsRouteImport.update({
-  id: '/staff/leads',
-  path: '/staff/leads',
-  getParentRoute: () => AppRoute,
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => AppStaffRoute,
 } as any)
 const AppStaffInstallationsRoute = AppStaffInstallationsRouteImport.update({
-  id: '/staff/installations',
-  path: '/staff/installations',
-  getParentRoute: () => AppRoute,
+  id: '/installations',
+  path: '/installations',
+  getParentRoute: () => AppStaffRoute,
 } as any)
 const AppCustomerSavingsRoute = AppCustomerSavingsRouteImport.update({
-  id: '/customer/savings',
-  path: '/customer/savings',
-  getParentRoute: () => AppRoute,
+  id: '/savings',
+  path: '/savings',
+  getParentRoute: () => AppCustomerRoute,
 } as any)
 const AppCustomerQuotesRoute = AppCustomerQuotesRouteImport.update({
-  id: '/customer/quotes',
-  path: '/customer/quotes',
-  getParentRoute: () => AppRoute,
+  id: '/quotes',
+  path: '/quotes',
+  getParentRoute: () => AppCustomerRoute,
 } as any)
 const AppCustomerOrdersRoute = AppCustomerOrdersRouteImport.update({
-  id: '/customer/orders',
-  path: '/customer/orders',
-  getParentRoute: () => AppRoute,
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AppCustomerRoute,
 } as any)
+const AppCustomerNotificationsRoute =
+  AppCustomerNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AppCustomerRoute,
+  } as any)
 const AppCustomerInstallationRoute = AppCustomerInstallationRouteImport.update({
-  id: '/customer/installation',
-  path: '/customer/installation',
-  getParentRoute: () => AppRoute,
+  id: '/installation',
+  path: '/installation',
+  getParentRoute: () => AppCustomerRoute,
 } as any)
 const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
-  id: '/admin/users',
-  path: '/admin/users',
-  getParentRoute: () => AppRoute,
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AppAdminRoute,
 } as any)
 const AppAdminRolesRoute = AppAdminRolesRouteImport.update({
-  id: '/admin/roles',
-  path: '/admin/roles',
-  getParentRoute: () => AppRoute,
+  id: '/roles',
+  path: '/roles',
+  getParentRoute: () => AppAdminRoute,
 } as any)
 const AppAdminQuotesRoute = AppAdminQuotesRouteImport.update({
-  id: '/admin/quotes',
-  path: '/admin/quotes',
-  getParentRoute: () => AppRoute,
+  id: '/quotes',
+  path: '/quotes',
+  getParentRoute: () => AppAdminRoute,
 } as any)
 const AppAdminProductsRoute = AppAdminProductsRouteImport.update({
-  id: '/admin/products',
-  path: '/admin/products',
-  getParentRoute: () => AppRoute,
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => AppAdminRoute,
 } as any)
 const AppAdminOrdersRoute = AppAdminOrdersRouteImport.update({
-  id: '/admin/orders',
-  path: '/admin/orders',
-  getParentRoute: () => AppRoute,
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminNotificationsRoute = AppAdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AppAdminRoute,
 } as any)
 const AppAdminInstallationsRoute = AppAdminInstallationsRouteImport.update({
-  id: '/admin/installations',
-  path: '/admin/installations',
-  getParentRoute: () => AppRoute,
+  id: '/installations',
+  path: '/installations',
+  getParentRoute: () => AppAdminRoute,
 } as any)
 const AppAdminAnalyticsRoute = AppAdminAnalyticsRouteImport.update({
-  id: '/admin/analytics',
-  path: '/admin/analytics',
-  getParentRoute: () => AppRoute,
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppAdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
+  '/admin': typeof AppAdminRouteWithChildren
+  '/customer': typeof AppCustomerRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
+  '/staff': typeof AppStaffRouteWithChildren
   '/login': typeof AuthLoginRoute
   '/products': typeof PublicProductsRouteWithChildren
   '/quote': typeof PublicQuoteRoute
   '/admin/analytics': typeof AppAdminAnalyticsRoute
   '/admin/installations': typeof AppAdminInstallationsRoute
+  '/admin/notifications': typeof AppAdminNotificationsRoute
   '/admin/orders': typeof AppAdminOrdersRoute
   '/admin/products': typeof AppAdminProductsRoute
   '/admin/quotes': typeof AppAdminQuotesRoute
   '/admin/roles': typeof AppAdminRolesRoute
   '/admin/users': typeof AppAdminUsersRoute
   '/customer/installation': typeof AppCustomerInstallationRoute
+  '/customer/notifications': typeof AppCustomerNotificationsRoute
   '/customer/orders': typeof AppCustomerOrdersRoute
   '/customer/quotes': typeof AppCustomerQuotesRoute
   '/customer/savings': typeof AppCustomerSavingsRoute
   '/staff/installations': typeof AppStaffInstallationsRoute
   '/staff/leads': typeof AppStaffLeadsRoute
+  '/staff/notifications': typeof AppStaffNotificationsRoute
   '/staff/orders': typeof AppStaffOrdersRoute
   '/staff/quotes': typeof AppStaffQuotesRoute
   '/products/$sku': typeof PublicProductsSkuRoute
@@ -219,26 +268,29 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AppAdminIndexRoute
   '/customer/': typeof AppCustomerIndexRoute
   '/staff/': typeof AppStaffIndexRoute
+  '/products/': typeof PublicProductsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/dashboard': typeof AppDashboardRoute
   '/login': typeof AuthLoginRoute
-  '/products': typeof PublicProductsRouteWithChildren
   '/quote': typeof PublicQuoteRoute
   '/admin/analytics': typeof AppAdminAnalyticsRoute
   '/admin/installations': typeof AppAdminInstallationsRoute
+  '/admin/notifications': typeof AppAdminNotificationsRoute
   '/admin/orders': typeof AppAdminOrdersRoute
   '/admin/products': typeof AppAdminProductsRoute
   '/admin/quotes': typeof AppAdminQuotesRoute
   '/admin/roles': typeof AppAdminRolesRoute
   '/admin/users': typeof AppAdminUsersRoute
   '/customer/installation': typeof AppCustomerInstallationRoute
+  '/customer/notifications': typeof AppCustomerNotificationsRoute
   '/customer/orders': typeof AppCustomerOrdersRoute
   '/customer/quotes': typeof AppCustomerQuotesRoute
   '/customer/savings': typeof AppCustomerSavingsRoute
   '/staff/installations': typeof AppStaffInstallationsRoute
   '/staff/leads': typeof AppStaffLeadsRoute
+  '/staff/notifications': typeof AppStaffNotificationsRoute
   '/staff/orders': typeof AppStaffOrdersRoute
   '/staff/quotes': typeof AppStaffQuotesRoute
   '/products/$sku': typeof PublicProductsSkuRoute
@@ -248,30 +300,37 @@ export interface FileRoutesByTo {
   '/admin': typeof AppAdminIndexRoute
   '/customer': typeof AppCustomerIndexRoute
   '/staff': typeof AppStaffIndexRoute
+  '/products': typeof PublicProductsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
+  '/_app/admin': typeof AppAdminRouteWithChildren
+  '/_app/customer': typeof AppCustomerRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/staff': typeof AppStaffRouteWithChildren
   '/_auth/login': typeof AuthLoginRoute
   '/_public/products': typeof PublicProductsRouteWithChildren
   '/_public/quote': typeof PublicQuoteRoute
   '/_public/': typeof PublicIndexRoute
   '/_app/admin/analytics': typeof AppAdminAnalyticsRoute
   '/_app/admin/installations': typeof AppAdminInstallationsRoute
+  '/_app/admin/notifications': typeof AppAdminNotificationsRoute
   '/_app/admin/orders': typeof AppAdminOrdersRoute
   '/_app/admin/products': typeof AppAdminProductsRoute
   '/_app/admin/quotes': typeof AppAdminQuotesRoute
   '/_app/admin/roles': typeof AppAdminRolesRoute
   '/_app/admin/users': typeof AppAdminUsersRoute
   '/_app/customer/installation': typeof AppCustomerInstallationRoute
+  '/_app/customer/notifications': typeof AppCustomerNotificationsRoute
   '/_app/customer/orders': typeof AppCustomerOrdersRoute
   '/_app/customer/quotes': typeof AppCustomerQuotesRoute
   '/_app/customer/savings': typeof AppCustomerSavingsRoute
   '/_app/staff/installations': typeof AppStaffInstallationsRoute
   '/_app/staff/leads': typeof AppStaffLeadsRoute
+  '/_app/staff/notifications': typeof AppStaffNotificationsRoute
   '/_app/staff/orders': typeof AppStaffOrdersRoute
   '/_app/staff/quotes': typeof AppStaffQuotesRoute
   '/_public/products/$sku': typeof PublicProductsSkuRoute
@@ -281,28 +340,35 @@ export interface FileRoutesById {
   '/_app/admin/': typeof AppAdminIndexRoute
   '/_app/customer/': typeof AppCustomerIndexRoute
   '/_app/staff/': typeof AppStaffIndexRoute
+  '/_public/products/': typeof PublicProductsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/customer'
     | '/dashboard'
+    | '/staff'
     | '/login'
     | '/products'
     | '/quote'
     | '/admin/analytics'
     | '/admin/installations'
+    | '/admin/notifications'
     | '/admin/orders'
     | '/admin/products'
     | '/admin/quotes'
     | '/admin/roles'
     | '/admin/users'
     | '/customer/installation'
+    | '/customer/notifications'
     | '/customer/orders'
     | '/customer/quotes'
     | '/customer/savings'
     | '/staff/installations'
     | '/staff/leads'
+    | '/staff/notifications'
     | '/staff/orders'
     | '/staff/quotes'
     | '/products/$sku'
@@ -312,26 +378,29 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/customer/'
     | '/staff/'
+    | '/products/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard'
     | '/login'
-    | '/products'
     | '/quote'
     | '/admin/analytics'
     | '/admin/installations'
+    | '/admin/notifications'
     | '/admin/orders'
     | '/admin/products'
     | '/admin/quotes'
     | '/admin/roles'
     | '/admin/users'
     | '/customer/installation'
+    | '/customer/notifications'
     | '/customer/orders'
     | '/customer/quotes'
     | '/customer/savings'
     | '/staff/installations'
     | '/staff/leads'
+    | '/staff/notifications'
     | '/staff/orders'
     | '/staff/quotes'
     | '/products/$sku'
@@ -341,29 +410,36 @@ export interface FileRouteTypes {
     | '/admin'
     | '/customer'
     | '/staff'
+    | '/products'
   id:
     | '__root__'
     | '/_app'
     | '/_auth'
     | '/_public'
+    | '/_app/admin'
+    | '/_app/customer'
     | '/_app/dashboard'
+    | '/_app/staff'
     | '/_auth/login'
     | '/_public/products'
     | '/_public/quote'
     | '/_public/'
     | '/_app/admin/analytics'
     | '/_app/admin/installations'
+    | '/_app/admin/notifications'
     | '/_app/admin/orders'
     | '/_app/admin/products'
     | '/_app/admin/quotes'
     | '/_app/admin/roles'
     | '/_app/admin/users'
     | '/_app/customer/installation'
+    | '/_app/customer/notifications'
     | '/_app/customer/orders'
     | '/_app/customer/quotes'
     | '/_app/customer/savings'
     | '/_app/staff/installations'
     | '/_app/staff/leads'
+    | '/_app/staff/notifications'
     | '/_app/staff/orders'
     | '/_app/staff/quotes'
     | '/_public/products/$sku'
@@ -373,6 +449,7 @@ export interface FileRouteTypes {
     | '/_app/admin/'
     | '/_app/customer/'
     | '/_app/staff/'
+    | '/_public/products/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -432,6 +509,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_app/staff': {
+      id: '/_app/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof AppStaffRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -439,26 +523,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/customer': {
+      id: '/_app/customer'
+      path: '/customer'
+      fullPath: '/customer'
+      preLoaderRoute: typeof AppCustomerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_public/products/': {
+      id: '/_public/products/'
+      path: '/'
+      fullPath: '/products/'
+      preLoaderRoute: typeof PublicProductsIndexRouteImport
+      parentRoute: typeof PublicProductsRoute
+    }
     '/_app/staff/': {
       id: '/_app/staff/'
-      path: '/staff'
+      path: '/'
       fullPath: '/staff/'
       preLoaderRoute: typeof AppStaffIndexRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppStaffRoute
     }
     '/_app/customer/': {
       id: '/_app/customer/'
-      path: '/customer'
+      path: '/'
       fullPath: '/customer/'
       preLoaderRoute: typeof AppCustomerIndexRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppCustomerRoute
     }
     '/_app/admin/': {
       id: '/_app/admin/'
-      path: '/admin'
+      path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AppAdminIndexRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppAdminRoute
     }
     '/_public/solutions/residential': {
       id: '/_public/solutions/residential'
@@ -490,154 +595,217 @@ declare module '@tanstack/react-router' {
     }
     '/_app/staff/quotes': {
       id: '/_app/staff/quotes'
-      path: '/staff/quotes'
+      path: '/quotes'
       fullPath: '/staff/quotes'
       preLoaderRoute: typeof AppStaffQuotesRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppStaffRoute
     }
     '/_app/staff/orders': {
       id: '/_app/staff/orders'
-      path: '/staff/orders'
+      path: '/orders'
       fullPath: '/staff/orders'
       preLoaderRoute: typeof AppStaffOrdersRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppStaffRoute
+    }
+    '/_app/staff/notifications': {
+      id: '/_app/staff/notifications'
+      path: '/notifications'
+      fullPath: '/staff/notifications'
+      preLoaderRoute: typeof AppStaffNotificationsRouteImport
+      parentRoute: typeof AppStaffRoute
     }
     '/_app/staff/leads': {
       id: '/_app/staff/leads'
-      path: '/staff/leads'
+      path: '/leads'
       fullPath: '/staff/leads'
       preLoaderRoute: typeof AppStaffLeadsRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppStaffRoute
     }
     '/_app/staff/installations': {
       id: '/_app/staff/installations'
-      path: '/staff/installations'
+      path: '/installations'
       fullPath: '/staff/installations'
       preLoaderRoute: typeof AppStaffInstallationsRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppStaffRoute
     }
     '/_app/customer/savings': {
       id: '/_app/customer/savings'
-      path: '/customer/savings'
+      path: '/savings'
       fullPath: '/customer/savings'
       preLoaderRoute: typeof AppCustomerSavingsRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppCustomerRoute
     }
     '/_app/customer/quotes': {
       id: '/_app/customer/quotes'
-      path: '/customer/quotes'
+      path: '/quotes'
       fullPath: '/customer/quotes'
       preLoaderRoute: typeof AppCustomerQuotesRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppCustomerRoute
     }
     '/_app/customer/orders': {
       id: '/_app/customer/orders'
-      path: '/customer/orders'
+      path: '/orders'
       fullPath: '/customer/orders'
       preLoaderRoute: typeof AppCustomerOrdersRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppCustomerRoute
+    }
+    '/_app/customer/notifications': {
+      id: '/_app/customer/notifications'
+      path: '/notifications'
+      fullPath: '/customer/notifications'
+      preLoaderRoute: typeof AppCustomerNotificationsRouteImport
+      parentRoute: typeof AppCustomerRoute
     }
     '/_app/customer/installation': {
       id: '/_app/customer/installation'
-      path: '/customer/installation'
+      path: '/installation'
       fullPath: '/customer/installation'
       preLoaderRoute: typeof AppCustomerInstallationRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppCustomerRoute
     }
     '/_app/admin/users': {
       id: '/_app/admin/users'
-      path: '/admin/users'
+      path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AppAdminUsersRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppAdminRoute
     }
     '/_app/admin/roles': {
       id: '/_app/admin/roles'
-      path: '/admin/roles'
+      path: '/roles'
       fullPath: '/admin/roles'
       preLoaderRoute: typeof AppAdminRolesRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppAdminRoute
     }
     '/_app/admin/quotes': {
       id: '/_app/admin/quotes'
-      path: '/admin/quotes'
+      path: '/quotes'
       fullPath: '/admin/quotes'
       preLoaderRoute: typeof AppAdminQuotesRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppAdminRoute
     }
     '/_app/admin/products': {
       id: '/_app/admin/products'
-      path: '/admin/products'
+      path: '/products'
       fullPath: '/admin/products'
       preLoaderRoute: typeof AppAdminProductsRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppAdminRoute
     }
     '/_app/admin/orders': {
       id: '/_app/admin/orders'
-      path: '/admin/orders'
+      path: '/orders'
       fullPath: '/admin/orders'
       preLoaderRoute: typeof AppAdminOrdersRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/admin/notifications': {
+      id: '/_app/admin/notifications'
+      path: '/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AppAdminNotificationsRouteImport
+      parentRoute: typeof AppAdminRoute
     }
     '/_app/admin/installations': {
       id: '/_app/admin/installations'
-      path: '/admin/installations'
+      path: '/installations'
       fullPath: '/admin/installations'
       preLoaderRoute: typeof AppAdminInstallationsRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppAdminRoute
     }
     '/_app/admin/analytics': {
       id: '/_app/admin/analytics'
-      path: '/admin/analytics'
+      path: '/analytics'
       fullPath: '/admin/analytics'
       preLoaderRoute: typeof AppAdminAnalyticsRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppAdminRoute
     }
   }
 }
 
-interface AppRouteChildren {
-  AppDashboardRoute: typeof AppDashboardRoute
+interface AppAdminRouteChildren {
   AppAdminAnalyticsRoute: typeof AppAdminAnalyticsRoute
   AppAdminInstallationsRoute: typeof AppAdminInstallationsRoute
+  AppAdminNotificationsRoute: typeof AppAdminNotificationsRoute
   AppAdminOrdersRoute: typeof AppAdminOrdersRoute
   AppAdminProductsRoute: typeof AppAdminProductsRoute
   AppAdminQuotesRoute: typeof AppAdminQuotesRoute
   AppAdminRolesRoute: typeof AppAdminRolesRoute
   AppAdminUsersRoute: typeof AppAdminUsersRoute
-  AppCustomerInstallationRoute: typeof AppCustomerInstallationRoute
-  AppCustomerOrdersRoute: typeof AppCustomerOrdersRoute
-  AppCustomerQuotesRoute: typeof AppCustomerQuotesRoute
-  AppCustomerSavingsRoute: typeof AppCustomerSavingsRoute
-  AppStaffInstallationsRoute: typeof AppStaffInstallationsRoute
-  AppStaffLeadsRoute: typeof AppStaffLeadsRoute
-  AppStaffOrdersRoute: typeof AppStaffOrdersRoute
-  AppStaffQuotesRoute: typeof AppStaffQuotesRoute
   AppAdminIndexRoute: typeof AppAdminIndexRoute
-  AppCustomerIndexRoute: typeof AppCustomerIndexRoute
-  AppStaffIndexRoute: typeof AppStaffIndexRoute
 }
 
-const AppRouteChildren: AppRouteChildren = {
-  AppDashboardRoute: AppDashboardRoute,
+const AppAdminRouteChildren: AppAdminRouteChildren = {
   AppAdminAnalyticsRoute: AppAdminAnalyticsRoute,
   AppAdminInstallationsRoute: AppAdminInstallationsRoute,
+  AppAdminNotificationsRoute: AppAdminNotificationsRoute,
   AppAdminOrdersRoute: AppAdminOrdersRoute,
   AppAdminProductsRoute: AppAdminProductsRoute,
   AppAdminQuotesRoute: AppAdminQuotesRoute,
   AppAdminRolesRoute: AppAdminRolesRoute,
   AppAdminUsersRoute: AppAdminUsersRoute,
+  AppAdminIndexRoute: AppAdminIndexRoute,
+}
+
+const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(
+  AppAdminRouteChildren,
+)
+
+interface AppCustomerRouteChildren {
+  AppCustomerInstallationRoute: typeof AppCustomerInstallationRoute
+  AppCustomerNotificationsRoute: typeof AppCustomerNotificationsRoute
+  AppCustomerOrdersRoute: typeof AppCustomerOrdersRoute
+  AppCustomerQuotesRoute: typeof AppCustomerQuotesRoute
+  AppCustomerSavingsRoute: typeof AppCustomerSavingsRoute
+  AppCustomerIndexRoute: typeof AppCustomerIndexRoute
+}
+
+const AppCustomerRouteChildren: AppCustomerRouteChildren = {
   AppCustomerInstallationRoute: AppCustomerInstallationRoute,
+  AppCustomerNotificationsRoute: AppCustomerNotificationsRoute,
   AppCustomerOrdersRoute: AppCustomerOrdersRoute,
   AppCustomerQuotesRoute: AppCustomerQuotesRoute,
   AppCustomerSavingsRoute: AppCustomerSavingsRoute,
+  AppCustomerIndexRoute: AppCustomerIndexRoute,
+}
+
+const AppCustomerRouteWithChildren = AppCustomerRoute._addFileChildren(
+  AppCustomerRouteChildren,
+)
+
+interface AppStaffRouteChildren {
+  AppStaffInstallationsRoute: typeof AppStaffInstallationsRoute
+  AppStaffLeadsRoute: typeof AppStaffLeadsRoute
+  AppStaffNotificationsRoute: typeof AppStaffNotificationsRoute
+  AppStaffOrdersRoute: typeof AppStaffOrdersRoute
+  AppStaffQuotesRoute: typeof AppStaffQuotesRoute
+  AppStaffIndexRoute: typeof AppStaffIndexRoute
+}
+
+const AppStaffRouteChildren: AppStaffRouteChildren = {
   AppStaffInstallationsRoute: AppStaffInstallationsRoute,
   AppStaffLeadsRoute: AppStaffLeadsRoute,
+  AppStaffNotificationsRoute: AppStaffNotificationsRoute,
   AppStaffOrdersRoute: AppStaffOrdersRoute,
   AppStaffQuotesRoute: AppStaffQuotesRoute,
-  AppAdminIndexRoute: AppAdminIndexRoute,
-  AppCustomerIndexRoute: AppCustomerIndexRoute,
   AppStaffIndexRoute: AppStaffIndexRoute,
+}
+
+const AppStaffRouteWithChildren = AppStaffRoute._addFileChildren(
+  AppStaffRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRouteWithChildren
+  AppCustomerRoute: typeof AppCustomerRouteWithChildren
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppStaffRoute: typeof AppStaffRouteWithChildren
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRouteWithChildren,
+  AppCustomerRoute: AppCustomerRouteWithChildren,
+  AppDashboardRoute: AppDashboardRoute,
+  AppStaffRoute: AppStaffRouteWithChildren,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -654,10 +822,12 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface PublicProductsRouteChildren {
   PublicProductsSkuRoute: typeof PublicProductsSkuRoute
+  PublicProductsIndexRoute: typeof PublicProductsIndexRoute
 }
 
 const PublicProductsRouteChildren: PublicProductsRouteChildren = {
   PublicProductsSkuRoute: PublicProductsSkuRoute,
+  PublicProductsIndexRoute: PublicProductsIndexRoute,
 }
 
 const PublicProductsRouteWithChildren = PublicProductsRoute._addFileChildren(

@@ -20,6 +20,32 @@ def get_installations(
     return installations
 
 
+@router.get("/map-locations")
+def get_installations_map_locations(
+    db: Session = Depends(get_db)
+):
+    """Get all installations with location data for map display (public endpoint)"""
+    installations = db.query(Installation).filter(
+        Installation.latitude.isnot(None),
+        Installation.longitude.isnot(None)
+    ).all()
+    
+    locations = []
+    for inst in installations:
+        locations.append({
+            "id": str(inst.id),
+            "latitude": float(inst.latitude) if inst.latitude else None,
+            "longitude": float(inst.longitude) if inst.longitude else None,
+            "site_address": inst.site_address,
+            "city": inst.city,
+            "state": inst.state,
+            "status": inst.status,
+            "start_date": inst.start_date.isoformat() if inst.start_date else None
+        })
+    
+    return locations
+
+
 @router.get("/{installation_id}", response_model=InstallationResponse)
 def get_installation(
     installation_id: str,

@@ -1,15 +1,27 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, Sun } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Sun,
+  Trash2,
+  ShoppingCart,
+  LocateFixed,
+  Loader2,
+  MapPin,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useCart } from "@/lib/cart";
+import AddressAutocomplete from "@/components/location/AddressAutocomplete";
 
 export const Route = createFileRoute("/_public/quote")({
   head: () => ({
     meta: [
-      { title: "Request a Solar Quote — SolarFlow" },
+      { title: "Request a Solar Quote â€” SolarFlow" },
       { name: "description", content: "Get a tailored solar quote in minutes. Tell us about your energy needs and our engineers will design a system for you." },
     ],
   }),
@@ -20,13 +32,27 @@ const steps = ["Your details", "Energy needs", "Location", "System recommendatio
 
 function QuotePage() {
   const navigate = useNavigate();
+  const { items, removeItem, totalPrice, clearCart } = useCart();
   const [step, setStep] = useState(0);
   const [data, setData] = useState({
-    name: "", email: "", phone: "",
-    propertyType: "Residential", monthlyBill: 50000, backupHours: 6,
-    address: "", city: "Lagos",
+    name: "",
+    email: "",
+    phone: "",
+    propertyType: "Residential",
+    monthlyBill: 50000,
+    backupHours: 6,
+    address: "",
+    city: "Lagos",
+    state: "",
+    country: "",
+    postalCode: "",
+    latitude: null as number | null,
+    longitude: null as number | null,
   });
   const [submitted, setSubmitted] = useState(false);
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [locationError, setLocationError] = useState("");
+  const [locationStatus, setLocationStatus] = useState("Type an address to see suggestions, or use your current location.");
 
   const update = <K extends keyof typeof data>(k: K, v: (typeof data)[K]) =>
     setData((d) => ({ ...d, [k]: v }));
@@ -37,7 +63,92 @@ function QuotePage() {
 
   const handleSubmit = () => {
     setSubmitted(true);
+    clearCart();
     setTimeout(() => navigate({ to: "/login" }), 2500);
+  };
+
+  const handleAddressSelect = (address: string, lat: number, lng: number, details: any) => {
+    setLocationError("");
+    setLocationStatus("Address selected from OpenStreetMap.");
+    setData((current) => ({
+      ...current,
+      address,
+      city: details.city || current.city,
+      state: details.state || "",
+      country: details.country || "",
+      postalCode: details.postal_code || "",
+      latitude: lat,
+      longitude: lng,
+    }));
+  };
+
+  const reverseGeocode = async (latitude: number, longitude: number) => {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&addressdetails=1`
+    );
+    if (!response.ok) {
+      throw new Error("Unable to look up your current address.");
+    }
+
+    const result = await response.json();
+    const address = result.address ?? {};
+    const city = address.city || address.town || address.village || address.county || "";
+
+    setData((current) => ({
+      ...current,
+      address: result.display_name || current.address,
+      city: city || current.city,
+      state: address.state || "",
+      country: address.country || "",
+      postalCode: address.postcode || "",
+      latitude,
+      longitude,
+    }));
+  };
+
+  const handleUseCurrentLocation = async () => {
+    if (!("geolocation" in navigator)) {
+      setLocationError("This browser does not support location access.");
+      return;
+    }
+
+    setLocationLoading(true);
+    setLocationError("");
+    setLocationStatus("Waiting for your permission to access location...");
+
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 60000,
+        });
+      });
+
+      setLocationStatus("Permission granted. Looking up your address...");
+      await reverseGeocode(position.coords.latitude, position.coords.longitude);
+      setLocationStatus("Current location added to your quote.");
+    } catch (error: unknown) {
+      if (error && typeof error === "object" && "code" in error) {
+        const geoError = error as GeolocationPositionError;
+        if (geoError.code === geoError.PERMISSION_DENIED) {
+          setLocationError("Location permission was denied. You can still search for the address manually.");
+        } else if (geoError.code === geoError.POSITION_UNAVAILABLE) {
+          setLocationError("Your location could not be determined right now.");
+        } else if (geoError.code === geoError.TIMEOUT) {
+          setLocationError("The location request timed out. Please try again.");
+        } else {
+          setLocationError("Unable to access your location.");
+        }
+      } else if (error instanceof Error) {
+        setLocationError(error.message);
+      } else {
+        setLocationError("Unable to access your location.");
+      }
+      setLocationStatus("Search for your address to continue.");
+    } finally {
+      setLocationLoading(false);
+    }
   };
 
   if (submitted) {
@@ -65,7 +176,7 @@ function QuotePage() {
       <div className="mt-8">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Sun className="h-4 w-4 text-primary" />
-          Step {step + 1} of {steps.length} — {steps[step]}
+          Step {step + 1} of {steps.length} â€” {steps[step]}
         </div>
         <div className="mt-3 flex gap-1">
           {steps.map((_, i) => (
@@ -87,8 +198,47 @@ function QuotePage() {
             transition={{ duration: 0.2 }}
           >
             {step === 0 && (
-              <div className="space-y-5">
+              <div className="space-y-6">
                 <h2 className="font-display text-3xl font-bold">Tell us about you</h2>
+
+                {items.length > 0 && (
+                  <div className="mb-8 rounded-xl border border-primary/20 bg-primary/5 p-4">
+                    <div className="mb-3 flex items-center gap-2 text-sm font-bold text-primary">
+                      <ShoppingCart className="h-4 w-4" />
+                      Products in your quote ({items.length})
+                    </div>
+                    <div className="space-y-3">
+                      {items.map((item) => (
+                        <div key={item.sku} className="flex items-center justify-between rounded-lg border border-border/40 bg-background/50 p-2 text-sm">
+                          <div className="flex items-center gap-3">
+                            {item.image && (
+                              <img src={item.image} alt="" className="h-10 w-10 rounded border border-border/60 object-cover" />
+                            )}
+                            <div>
+                              <div className="font-medium">{item.name}</div>
+                              <div className="text-xs text-muted-foreground">SKU: {item.sku} x {item.quantity}</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="font-bold">${(item.price * item.quantity).toLocaleString()}</div>
+                            <button
+                              type="button"
+                              onClick={() => removeItem(item.sku)}
+                              className="text-muted-foreground transition-colors hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                      <div className="flex justify-between border-t border-border/40 pt-2 font-bold text-primary">
+                        <span>Equipment Subtotal</span>
+                        <span>${totalPrice.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="grid gap-4">
                   <div><Label>Full name</Label><Input value={data.name} onChange={(e) => update("name", e.target.value)} placeholder="Jane Adeola" /></div>
                   <div><Label>Email</Label><Input type="email" value={data.email} onChange={(e) => update("email", e.target.value)} placeholder="jane@example.com" /></div>
@@ -119,7 +269,7 @@ function QuotePage() {
                   </div>
                 </div>
                 <div>
-                  <Label>Monthly electricity bill (₦)</Label>
+                  <Label>Monthly electricity bill (Naira)</Label>
                   <Input
                     type="number"
                     value={data.monthlyBill}
@@ -144,8 +294,51 @@ function QuotePage() {
             {step === 2 && (
               <div className="space-y-5">
                 <h2 className="font-display text-3xl font-bold">Where will it be installed?</h2>
-                <div><Label>Address</Label><Input value={data.address} onChange={(e) => update("address", e.target.value)} placeholder="12 Palm Grove" /></div>
-                <div><Label>City</Label><Input value={data.city} onChange={(e) => update("city", e.target.value)} /></div>
+
+                <div className="rounded-xl border border-border/60 bg-background/50 p-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <div className="text-sm font-semibold">Search like a map app</div>
+                      <div className="text-sm text-muted-foreground">
+                        Start typing to get address suggestions, or let the browser prompt for your location.
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleUseCurrentLocation}
+                      disabled={locationLoading}
+                      className="border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
+                    >
+                      {locationLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LocateFixed className="mr-2 h-4 w-4" />}
+                      Use current location
+                    </Button>
+                  </div>
+                  <div className="mt-3 flex items-start gap-2 text-sm text-muted-foreground">
+                    <MapPin className="mt-0.5 h-4 w-4 text-primary" />
+                    <span>{locationError || locationStatus}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <Label>Address</Label>
+                  <AddressAutocomplete
+                    value={data.address}
+                    onChange={(value) => update("address", value)}
+                    onSelect={handleAddressSelect}
+                    placeholder="Search for an address or landmark"
+                    inputClassName="border-border/60 bg-background text-foreground placeholder:text-muted-foreground shadow-none focus:border-primary focus:ring-primary/30"
+                    dropdownClassName="border-border/60 bg-popover"
+                  />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div><Label>City</Label><Input value={data.city} onChange={(e) => update("city", e.target.value)} /></div>
+                  <div><Label>State / Region</Label><Input value={data.state} onChange={(e) => update("state", e.target.value)} placeholder="Lagos State" /></div>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div><Label>Country</Label><Input value={data.country} onChange={(e) => update("country", e.target.value)} placeholder="Nigeria" /></div>
+                  <div><Label>Postal code</Label><Input value={data.postalCode} onChange={(e) => update("postalCode", e.target.value)} placeholder="100001" /></div>
+                </div>
               </div>
             )}
 
@@ -161,9 +354,9 @@ function QuotePage() {
                   <Stat label="Panels" value={`${panelCount}`} />
                   <Stat label="Battery backup" value={`${data.backupHours}h`} />
                   <Stat label="Est. price" value={`$${estimatedPrice.toLocaleString()}`} />
-                  <Stat label="Monthly savings" value={`₦${(data.monthlyBill * 0.7).toLocaleString()}`} />
+                  <Stat label="Monthly savings" value={`N${(data.monthlyBill * 0.7).toLocaleString()}`} />
                   <Stat label="ROI" value="3-5 yrs" />
-                  <Stat label="CO₂ saved/yr" value={`${(recommendedKw * 1.2).toFixed(1)}t`} />
+                  <Stat label="CO2 saved/yr" value={`${(recommendedKw * 1.2).toFixed(1)}t`} />
                 </div>
               </div>
             )}
@@ -173,10 +366,10 @@ function QuotePage() {
                 <h2 className="font-display text-3xl font-bold">Review and submit</h2>
                 <p className="text-muted-foreground">We'll have an engineer reach out within 24 hours.</p>
                 <div className="rounded-xl border border-border/60 bg-background p-5 text-sm">
-                  <Row label="Name" value={data.name || "—"} />
-                  <Row label="Email" value={data.email || "—"} />
+                  <Row label="Name" value={data.name || "-"} />
+                  <Row label="Email" value={data.email || "-"} />
                   <Row label="Property" value={data.propertyType} />
-                  <Row label="Location" value={`${data.address || "—"}, ${data.city}`} />
+                  <Row label="Location" value={[data.address || "-", data.city, data.state, data.country].filter(Boolean).join(", ")} />
                   <Row label="Recommended" value={`${recommendedKw} kW system`} />
                   <Row label="Estimated price" value={`$${estimatedPrice.toLocaleString()}`} />
                 </div>

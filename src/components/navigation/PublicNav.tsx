@@ -1,8 +1,9 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Sun, Menu, X } from "lucide-react";
+import { Sun, Menu, X, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { useCart } from "@/lib/cart";
 
 const navItems = [
   { to: "/", label: "Home" },
@@ -15,6 +16,7 @@ const navItems = [
 export function PublicHeader() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const { totalCount } = useCart();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
@@ -47,6 +49,14 @@ export function PublicHeader() {
 
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
+          <Link to="/quote" className="relative p-2 text-muted-foreground hover:text-foreground">
+            <ShoppingCart className="h-5 w-5" />
+            {totalCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                {totalCount}
+              </span>
+            )}
+          </Link>
           <Link to="/login">
             <Button variant="ghost" size="sm">Sign in</Button>
           </Link>
@@ -59,6 +69,14 @@ export function PublicHeader() {
 
         <div className="flex items-center gap-1 md:hidden">
           <ThemeToggle />
+          <Link to="/quote" className="relative p-2 text-muted-foreground">
+            <ShoppingCart className="h-5 w-5" />
+            {totalCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                {totalCount}
+              </span>
+            )}
+          </Link>
           <button
             className="p-2 text-foreground"
             onClick={() => setOpen(!open)}

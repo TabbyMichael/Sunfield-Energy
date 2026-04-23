@@ -1,15 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RoleGuard } from "@/components/guards/RouteGuards";
 import { PageHeader } from "@/components/dashboard/Shared";
 import { Shield, Check } from "lucide-react";
 import { rolePermissions } from "@/lib/rbac";
 
 export const Route = createFileRoute("/_app/admin/roles")({
-  component: () => (
-    <RoleGuard allowed={["admin"]}>
-      <RolesPage />
-    </RoleGuard>
-  ),
+  component: RolesPage,
 });
 
 const allPermissions = Array.from(

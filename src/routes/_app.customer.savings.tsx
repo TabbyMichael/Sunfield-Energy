@@ -6,11 +6,7 @@ import { energyProduction } from "@/lib/mock-data";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export const Route = createFileRoute("/_app/customer/savings")({
-  component: () => (
-    <RoleGuard allowed={["customer"]}>
-      <SavingsPage />
-    </RoleGuard>
-  ),
+  component: SavingsPage,
 });
 
 const monthly = [

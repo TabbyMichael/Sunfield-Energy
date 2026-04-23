@@ -2,10 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
   Sun, Factory, Building2, Home as HomeIcon, ArrowRight, Zap, ShieldCheck,
-  TrendingUp, Battery, Wrench, BarChart3,
+  TrendingUp, Battery, Wrench, BarChart3, MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import DashboardMap from "@/components/dashboard/DashboardMap";
 import heroImage from "@/assets/hero-solar.jpg";
+import { useEffect, useState } from "react";
+import { installationMapLocations } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_public/")({
   head: () => ({
@@ -42,13 +45,31 @@ const features = [
 ];
 
 function HomePage() {
+  const [locations, setLocations] = useState(installationMapLocations);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch installation locations from API (public endpoint - no auth needed)
+    fetch('http://127.0.0.1:8000/api/v1/installations/map-locations')
+      .then(res => res.json())
+      .then(data => {
+        setLocations(Array.isArray(data) && data.length > 0 ? data : installationMapLocations);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching locations:', err);
+        setLocations(installationMapLocations);
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <div>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img src={heroImage} alt="" className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/85 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/40 to-background/95" />
         </div>
         <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
           <motion.div
@@ -64,7 +85,7 @@ function HomePage() {
               Sunlight, <span className="text-gradient-solar">captured.</span><br />
               Power, delivered.
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted-foreground">
+            <p className="mt-6 max-w-xl text-lg text-muted-foreground font-medium">
               SolarFlow designs, installs and monitors solar energy systems for industrial,
               commercial and residential customers. One platform. Total visibility.
             </p>
@@ -84,7 +105,7 @@ function HomePage() {
 
           <div className="relative mt-20 grid grid-cols-2 gap-px rounded-2xl border border-border/40 bg-border/40 sm:grid-cols-4 overflow-hidden">
             {stats.map((s) => (
-              <div key={s.label} className="bg-background/80 p-6 backdrop-blur">
+              <div key={s.label} className="bg-background/40 p-6 backdrop-blur-sm">
                 <div className="font-display text-3xl font-bold text-gradient-solar">{s.value}</div>
                 <div className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">{s.label}</div>
               </div>
@@ -150,6 +171,53 @@ function HomePage() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Installation Locations Map */}
+      <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-3">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+              <MapPin className="h-4 w-4" />
+              Our Presence
+            </div>
+            <h2 className="mt-3 font-display text-4xl font-bold">Powering across the region</h2>
+            <p className="mt-4 text-muted-foreground">
+              Explore our growing network of solar installations. From industrial facilities to
+              residential homes, we're powering the future with clean energy.
+            </p>
+            <div className="mt-6 space-y-3">
+              <div className="flex items-center gap-3 text-sm">
+                <div className="h-2 w-2 rounded-full bg-blue-500"></div>
+                <span className="text-muted-foreground">Scheduled installations</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm">
+                <div className="h-2 w-2 rounded-full bg-orange-500"></div>
+                <span className="text-muted-foreground">In progress</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm">
+                <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                <span className="text-muted-foreground">Completed systems</span>
+              </div>
+            </div>
+          </div>
+          <div className="lg:col-span-2">
+            <div className="relative overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-card">
+              <div className="absolute inset-x-0 top-0 z-[1001] flex items-center justify-between gap-4 border-b border-white/10 bg-background/70 px-5 py-4 backdrop-blur-md">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.24em] text-primary">Live network map</div>
+                  <div className="mt-1 text-sm text-muted-foreground">
+                    {loading ? "Syncing installation locations..." : `${locations.length} active locations on the map`}
+                  </div>
+                </div>
+                <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                  OpenStreetMap
+                </div>
+              </div>
+              <DashboardMap locations={locations} height="500px" />
             </div>
           </div>
         </div>

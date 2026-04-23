@@ -7,6 +7,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/lib/auth";
 import { ThemeProvider } from "@/lib/theme";
+import { CartProvider } from "@/lib/cart";
 import appCss from "../styles.css?url";
 
 interface RouterContext {
@@ -63,7 +64,9 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-          <Outlet />
+          <CartProvider>
+            <Outlet />
+          </CartProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

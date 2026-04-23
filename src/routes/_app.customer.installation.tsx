@@ -6,14 +6,10 @@ import { InstallationTimeline } from "@/components/dashboard/InstallationTimelin
 import { MapPin, Calendar, Users } from "lucide-react";
 
 export const Route = createFileRoute("/_app/customer/installation")({
-  component: () => (
-    <RoleGuard allowed={["customer"]}>
-      <CustomerInstallationPage />
-    </RoleGuard>
-  ),
+  component: CustomerInstallation,
 });
 
-function CustomerInstallationPage() {
+function CustomerInstallation() {
   const mine = installations.find((i) => i.customer === "Zara Bello") ?? installations[0];
 
   return (

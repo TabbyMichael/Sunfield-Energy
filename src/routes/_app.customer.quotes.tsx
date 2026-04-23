@@ -4,11 +4,7 @@ import { PageHeader, StatusBadge } from "@/components/dashboard/Shared";
 import { quotes } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_app/customer/quotes")({
-  component: () => (
-    <RoleGuard allowed={["customer"]}>
-      <CustomerQuotesPage />
-    </RoleGuard>
-  ),
+  component: CustomerQuotesPage,
 });
 
 function CustomerQuotesPage() {
