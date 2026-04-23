@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, StatCard } from "@/components/dashboard/Shared";
-import { Activity, DollarSign, Wrench, Leaf, ArrowRight } from "lucide-react";
+import { Activity, DollarSign, Wrench, Leaf, ArrowRight, Camera, ImagePlus, Sparkles } from "lucide-react";
 import { energyProduction } from "@/lib/mock-data";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,13 @@ export const Route = createFileRoute("/_app/customer/")({
   component: CustomerOverview,
 });
 
-function CustomerOverview() {
+const snapActions = [
+  { label: "Story Frame", icon: Sparkles },
+  { label: "Snap Vibe", icon: Camera },
+  { label: "Photo Drop", icon: ImagePlus },
+];
+
+export function CustomerOverview() {
   return (
     <div>
       <PageHeader
@@ -17,7 +23,9 @@ function CustomerOverview() {
         description="Your solar system at a glance."
         actions={
           <Link to="/customer/installation">
-            <Button variant="outline">Track installation <ArrowRight className="ml-1 h-4 w-4" /></Button>
+            <Button variant="outline">
+              Track installation <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
           </Link>
         }
       />
@@ -25,9 +33,47 @@ function CustomerOverview() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="System status" value="Online" delta="All systems normal" icon={Activity} accent="success" />
         <StatCard label="Today's production" value="48 kWh" delta="+12% vs avg" icon={Wrench} accent="primary" />
-        <StatCard label="Monthly savings" value="₦78,400" delta="Locked in" icon={DollarSign} accent="secondary" />
-        <StatCard label="CO₂ avoided" value="1.4 t" delta="This year" icon={Leaf} accent="success" />
+        <StatCard label="Monthly savings" value="NGN 78,400" delta="Locked in" icon={DollarSign} accent="secondary" />
+        <StatCard label="CO2 avoided" value="1.4 t" delta="This year" icon={Leaf} accent="success" />
       </div>
+
+      <section className="mt-6 rounded-2xl border border-border/60 bg-surface p-6 shadow-card" aria-label="Project media updates">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="font-display text-lg font-bold">Project media updates</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Upload a customer photo and share quick Snapchat-style update actions.
+            </p>
+          </div>
+          <label
+            htmlFor="customer-photo-upload"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow hover:bg-primary/90"
+          >
+            <ImagePlus className="h-4 w-4" />
+            Add Photo
+          </label>
+          <input id="customer-photo-upload" type="file" accept="image/*" className="sr-only" />
+        </div>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          {snapActions.map((action) => {
+            const Icon = action.icon;
+            return (
+              <button
+                key={action.label}
+                type="button"
+                className="flex items-center gap-3 rounded-xl border border-border/60 bg-background px-4 py-3 text-left transition-colors hover:border-primary/40 hover:bg-muted/60"
+                aria-label={action.label}
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-energy text-secondary-foreground">
+                  <Icon className="h-4 w-4" />
+                </span>
+                <span className="font-medium">{action.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 rounded-2xl border border-border/60 bg-surface p-6 shadow-card">
@@ -54,15 +100,34 @@ function CustomerOverview() {
         <div className="rounded-2xl border border-border/60 bg-surface p-6 shadow-card">
           <h3 className="font-display text-lg font-bold">Your system</h3>
           <dl className="mt-4 space-y-3 text-sm">
-            <div className="flex justify-between"><dt className="text-muted-foreground">Capacity</dt><dd className="font-semibold">8 kW</dd></div>
-            <div className="flex justify-between"><dt className="text-muted-foreground">Panels</dt><dd className="font-semibold">16 × 500W</dd></div>
-            <div className="flex justify-between"><dt className="text-muted-foreground">Inverter</dt><dd className="font-semibold">Deye 8K Hybrid</dd></div>
-            <div className="flex justify-between"><dt className="text-muted-foreground">Battery</dt><dd className="font-semibold">10 kWh</dd></div>
-            <div className="flex justify-between"><dt className="text-muted-foreground">Installed</dt><dd className="font-semibold">Apr 2025</dd></div>
-            <div className="flex justify-between"><dt className="text-muted-foreground">Warranty</dt><dd className="font-semibold text-success">25 years</dd></div>
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Capacity</dt>
+              <dd className="font-semibold">8 kW</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Panels</dt>
+              <dd className="font-semibold">16 x 500W</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Inverter</dt>
+              <dd className="font-semibold">Deye 8K Hybrid</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Battery</dt>
+              <dd className="font-semibold">10 kWh</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Installed</dt>
+              <dd className="font-semibold">Apr 2025</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Warranty</dt>
+              <dd className="font-semibold text-success">25 years</dd>
+            </div>
           </dl>
         </div>
       </div>
     </div>
   );
 }
+

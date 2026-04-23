@@ -1,8 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Sun, Zap, Battery, ArrowLeft, ShoppingCart, Package, Check, Truck, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/lib/cart";
-import { toast } from "sonner";
 
 const products = [
   // Solar Panels
@@ -72,7 +70,6 @@ export const Route = createFileRoute("/_public/products/$sku")({
 function ProductDetailPage() {
   const { sku } = Route.useParams();
   const product = products.find((p) => p.sku === sku);
-  const { addItem } = useCart();
 
   if (!product) {
     return (
@@ -135,21 +132,7 @@ function ProductDetailPage() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button 
-              size="lg" 
-              className="bg-gradient-solar text-primary-foreground hover:opacity-90 shadow-glow" 
-              disabled={product.stock === 0}
-              onClick={() => {
-                addItem({
-                  sku: product.sku,
-                  name: product.name,
-                  price: product.price,
-                  image: product.image,
-                  category: product.category
-                });
-                toast.success(`${product.name} added to your quote`);
-              }}
-            >
+            <Button size="lg" className="bg-gradient-solar text-primary-foreground hover:opacity-90 shadow-glow" disabled={product.stock === 0}>
               <ShoppingCart className="mr-2 h-5 w-5" /> Add to Quote
             </Button>
             <Link to="/quote">
